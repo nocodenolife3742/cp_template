@@ -6,7 +6,12 @@
 
 ## 用法
 
-在各個模板中可以找到對應的default code，搭配對應版本的code就可以用了，~~這些code懶得改成沒有macros的版本~~。
+在使用這些模板前，需要加上這些東西
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+```
+其中有些地方需要注意，有些模板有使用到 C++11 的語法，在舊版的 judge 上可能不適用。 
 
 ## 我的codeforces帳號
 
