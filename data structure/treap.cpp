@@ -2,8 +2,10 @@ struct treap  {
     struct node {
         node *l, *r;
         int pri, val, sz;
-        // add varibles if needed : !!remember to initialize!!
-        node(int v) : pri(rand()), val(v), sz(1) {
+        // add varibles if needed
+        // !!remember to initialize!!
+        node(int v) : pri(rand()), val(v) {
+            sz = 1;
             l = r = 0;
         }
         void push();
