@@ -7,7 +7,7 @@ struct segtree {
         int l, r;
         node *lc, *rc;
         node(T val, int l, int r) : val(val), l(l), r(r) {
-            lc = rc = nullptr;
+            lc = rc = 0;
             tag = 0;
         }
         void down() {
@@ -27,7 +27,6 @@ struct segtree {
     } *root;
     node *build(int l, int r, vector<T> &a) {
         node *n = new node(a[l], l, r);
-        n->l = l, n->r = r;
         if (l == r)
             return n;
         int mid = (l + r) >> 1;
@@ -61,7 +60,7 @@ struct segtree {
 
     // implementation these two functions
     static T merge(T a, T b);            // merge two children
-    static void add_tag(node *n, T val); // add tag to this node
+    static void add_tag(node *n, T val); // add tag and change val to this node
 
     // public operations
     segtree(vector<T> &a) {
