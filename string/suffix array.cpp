@@ -1,8 +1,7 @@
 vector<int> sa(string s) {
     s += '$';
     int n = s.size();
-    vector<int> ord(n), rank(n), cnt(n + 1);
-    vector<int> tmp(n);
+    vector<int> ord(n), rank(n), cnt(n + 1), tmp(n);
     iota(ord.begin(), ord.end(), 0);
     sort(ord.begin(), ord.end(), [&](int i, int j) { return s[i] < s[j]; });
     for (int i = 1; i < n; i++) {
