@@ -1,4 +1,4 @@
-vector<int> sa(string s) {
+pair<vector<int>, vector<int>> sa_lcp(string &s) {
     s += '$';
     int n = s.size();
     vector<int> ord(n), rank(n), cnt(n + 1), tmp(n);
@@ -30,5 +30,12 @@ vector<int> sa(string s) {
         }
         swap(rank, tmp);
     }
-    return vector<int>(ord.begin() + 1, ord.end());
+    for (int i = 0, k = 0; i < n - 1; i++) {
+        while (s[i + k] == s[ord[rank[i] - 1] + k])
+            k++;
+        tmp[rank[i] - 1] = k;
+        if (k > 0)
+            k--;
+    }
+    return {ord, vector<int>(tmp.begin(), tmp.end() - 1)};
 }
