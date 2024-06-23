@@ -1,27 +1,22 @@
-// macros
 #define TP template
 #define TN typename
-#define OS ostream
-#define iter_print TP<TN T> TN enable_if<is_iter<T>::value && !is_same<string, T>::value, OS &>::type operator<<(OS &o, const T &t)
-#define pair_print TP<TN T1, TN T2> OS &operator<<(OS &o, const pair<T1, T2> &p)
+#define iout TP<TN T> TN enable_if<is_iter<T>::value && !is_same<string,\
+             T>::value, ostream &>::type operator<<(ostream &o, const T &t)
+#define pout TP<TN T1, TN T2> ostream &operator<<(ostream &o, const pair<T1, T2> &p)
 TP<TN T> using is_iter = decltype(begin(declval<T>()), end(declval<T>()), true_type());
 
-// definitions
-iter_print;
-pair_print;
-iter_print {
+pout;
+iout;
+pout { return o << '(' << p.first << ':' << p.second << ')'; }
+iout {
+    if (t.empty())
+        return o << "[{empty}]";
     o << '[';
-    for (auto &&i : t)
-        o << *i << ' ';
-    o << ']';
-    return o;
-}
-pair_print {
-    o << '(' << p.first << ':' << p.second << ')';
-    return o;
+    for (auto &&i: t)
+        o << i << ' ';
+    return o << "\b]";
 }
 
-// debug function
-void dbg() { cerr << '\n'; }
+void dbg() { cerr << endl; }
 TP<TN T1, TN... T2>
 void dbg(T1 v1, T2... v2) { cerr << v1 << ' ', dbg(v2...); }
