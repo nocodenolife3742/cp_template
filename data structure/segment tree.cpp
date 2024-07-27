@@ -1,5 +1,6 @@
-// implement merge, apply function
-// and initialize data and lazy of node
+// 1. implement merge, apply function
+// 2. initialize data and lazy of node
+// 3. decide default lazy tag
 template<typename T1, typename T2>
 struct segtree {
     static T1 merge(T1 a, T1 b) {
