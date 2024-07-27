@@ -1,76 +1,65 @@
-template <typename T>
+// implement merge, apply function
+// and initialize data and lazy of node
+template<typename T1, typename T2>
 struct segtree {
-    // implementation details
-    int size;
+    static T1 merge(T1 a, T1 b) {
+        return a + b;
+    }
     struct node {
-        T val, tag;
-        int l, r;
+        T1 data;
+        T2 lazy;
         node *lc, *rc;
-        node(T val, int l, int r) : val(val), l(l), r(r) {
-            lc = rc = 0;
-            tag = 0;
-        }
-        void down() {
-            if (!lc || !rc)
-                return;
-            if (tag) {
-                add_tag(lc, tag);
-                add_tag(rc, tag);
-                tag = 0;
-            }
+        void apply(T2 t, int l, int r) {
+            data += (r - l + 1) * t;
+            lazy += t;
         }
         void up() {
-            if (!lc || !rc)
-                return;
-            val = merge(lc->val, rc->val);
+            if (lc) data = merge(lc->data, rc->data);
+        }
+        void down(int l, int r) {
+            if (lc) {
+                int m = (l + r) / 2;
+                lc->apply(lazy, l, m);
+                rc->apply(lazy, m + 1, r);
+            }
+            lazy = 0;
         }
     } *root;
-    node *build(int l, int r, vector<T> &a) {
-        node *n = new node(a[l], l, r);
-        if (l == r)
-            return n;
-        int mid = (l + r) >> 1;
-        n->lc = build(l, mid, a);
-        n->rc = build(mid + 1, r, a);
-        return n->up(), n;
+    int n;
+    node *build(int l, int r) {
+        node *p = new node();
+        if (l == r) return p;
+        int m = (l + r) / 2;
+        p->lc = build(l, m);
+        p->rc = build(m + 1, r);
+        return p->up(), p;
     }
-    T query(node *n, int l, int r, int ql, int qr) {
-        n->down();
-        if (ql <= l && r <= qr)
-            return n->val;
-        int mid = (l + r) >> 1;
-        if (qr <= mid)
-            return query(n->lc, l, mid, ql, qr);
-        if (ql > mid)
-            return query(n->rc, mid + 1, r, ql, qr);
-        return merge(query(n->lc, l, mid, ql, qr),
-                     query(n->rc, mid + 1, r, ql, qr));
+    void modify(int a, int b, int l, int r, node *p, T2 x) {
+        if (r < a || l > b) return;
+        p->down(l, r);
+        if (a <= l && b >= r)
+            return p->apply(x, l, r);
+        int m = (l + r) / 2;
+        modify(a, b, l, m, p->lc, x);
+        modify(a, b, m + 1, r, p->rc, x);
+        p->up();
     }
-    void modify(node *n, int l, int r, int ml, int mr, T val) {
-        if (l > mr || r < ml)
-            return;
-        n->down();
-        if (ml <= l && r <= mr)
-            return add_tag(n, val), void();
-        int mid = (l + r) >> 1;
-        modify(n->lc, l, mid, ml, mr, val);
-        modify(n->rc, mid + 1, r, ml, mr, val);
-        n->up();
+    T1 query(int a, int b, int l, int r, node *p) {
+        p->down(l, r);
+        if (a <= l && b >= r) return p->data;
+        int m = (l + r) / 2;
+        if (b <= m) return query(a, b, l, m, p->lc);
+        if (a > m) return query(a, b, m + 1, r, p->rc);
+        return merge(query(a, b, l, m, p->lc),
+                     query(a, b, m + 1, r, p->rc));
     }
-
-    // implementation these two functions
-    static T merge(T a, T b);            // merge two children
-    static void add_tag(node *n, T val); // add tag and change val to this node
-
-    // public operations
-    segtree(vector<T> &a) {
-        size = a.size();
-        root = build(0, size - 1, a);
+    segtree(int size) : n(size) {
+        root = build(0, n - 1);
     }
-    T query(int ql, int qr) {
-        return query(root, 0, size - 1, ql, qr);
+    void modify(int l, int r, T2 x) {
+        modify(l, r, 0, n - 1, root, x);
     }
-    void modify(int l, int r, T val) {
-        modify(root, 0, size - 1, l, r, val);
+    T1 query(int l, int r) {
+        return query(l, r, 0, n - 1, root);
     }
 };
