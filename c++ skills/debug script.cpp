@@ -16,10 +16,10 @@ template<typename T1, typename T2>
 ostream &operator<<(ostream &o, const pair<T1, T2> &p);
 template<typename T1, typename T2>
 enable_if_t<is_same_v<T1, ostream>, T1 &> operator<<(T1 &o, const T2 &v) {
-    o << '[';
-    for (auto &&x: v)
-        o << x << ' ';
-    return o << (v.empty() ? "]" : "\b]");
+    o << "[ ";
+    for (auto &&i: v)
+        o << i << ' ';
+    return o << ']';
 }
 template<typename T1, typename T2>
 ostream &operator<<(ostream &o, const pair<T1, T2> &p) {
