@@ -8,14 +8,13 @@ pair<vector<int>, vector<int> > sa_lcp(string &s) {
         rank[ord[i]] = rank[ord[i - 1]];
         if (s[ord[i]] != s[ord[i - 1]]) rank[ord[i]]++;
     }
-    for (int len = 1; len < n; len *= 2) {
+    for (int len = 1; len < n; len *= 2, swap(rank, tmp)) {
         fill(cnt.begin(), cnt.end(), 0);
         for (int j: rank) cnt[j + 1]++;
         for (int j = 1; j <= n; j++) cnt[j] += cnt[j - 1];
         for (int &x: ord) x = (x - len + n) % n;
         for (int j: ord) tmp[cnt[rank[j]]++] = j;
-        swap(ord, tmp);
-        tmp[ord[0]] = 0;
+        swap(ord, tmp), tmp[ord[0]] = 0;
         int rcnt = 0;
         for (int j = 1; j < n; j++) {
             if (rank[ord[j - 1]] != rank[ord[j]] ||
@@ -23,7 +22,6 @@ pair<vector<int>, vector<int> > sa_lcp(string &s) {
                 rcnt++;
             tmp[ord[j]] = rcnt;
         }
-        swap(rank, tmp);
     }
     for (int i = 0, k = 0; i < n - 1; i++) {
         while (s[i + k] == s[ord[rank[i] - 1] + k]) k++;
