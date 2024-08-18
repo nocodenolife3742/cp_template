@@ -12,4 +12,13 @@ struct bit {
             r += t[idx];
         return r;
     }
+    int kth(T k) { // lower bound index of prefix sum
+        int r = 0;
+        for (int i = __lg(t.size()); i >= 0; i--) {
+            int p = (1 << i) + r;
+            if (p < t.size() && k - t[p] >= 0)
+                k -= t[p], r = p;
+        }
+        return r;
+    }
 };
